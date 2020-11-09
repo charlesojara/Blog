@@ -1,12 +1,34 @@
 from django.shortcuts import render
-from django.views import generic
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+#from django.views import generic
 from .models import Post
+from django.urls import reverse_lazy
+from .forms import PostForm
 
 # Create your views here.
-class PostList(generic.ListView):
-    queryset = Post.objects.filter(status=1).order_by('-created_on')
+
+class IndexView(ListView):
+    model = Post
     template_name = 'index.html'
 
-class PostDetail(generic.DetailView):
+class DetailView(DetailView):
     model = Post
-    template_name = 'post_detail.html'
+    template_name = 'detail.html'
+
+class AddPostView(CreateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'add_post.html'
+    #fields = '__all__'
+
+class UpdatePostView(UpdateView):
+    model=Post
+    form_class = PostForm
+    template_name='update_post.html'
+    fields=['title','content']
+
+class DeletePostView(DeleteView):
+    model=Post
+    #form_class = PostForm
+    template_name='delete_post.html'
+    success_url = reverse_lazy('index')
